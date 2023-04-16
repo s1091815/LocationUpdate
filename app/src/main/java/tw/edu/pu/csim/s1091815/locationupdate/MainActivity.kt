@@ -2,32 +2,24 @@ package tw.edu.pu.csim.s1091815.locationupdate
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.location.LocationManagerCompat.getCurrentLocation
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
 
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var locationTracker: LocationTracker
 
     var util: Util = Util()
     var myLocationService: LocationService = LocationService()
@@ -100,8 +92,14 @@ class MainActivity : AppCompatActivity() {
         stopButton.setOnClickListener {
             stopServiceFunc()
         }
-        newButton.setOnClickListener {
+        locationTracker = LocationTracker()
 
+        // 在Button的click事件中顯示最後的經緯度位置
+        val button = findViewById<Button>(R.id.newButton)
+        button.setOnClickListener {
+            val lastLocation = locationTracker.getLastLocation()
+            val message = "Last location: ${lastLocation.first}, ${lastLocation.second}"
+            Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -138,7 +136,16 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "服務已停止", Toast.LENGTH_SHORT).show()
         }
     }
-
+    /*private fun newServiceFunc(){
+        myLocationService = LocationService()
+        serviceIntent = Intent(
+            this,
+            myLocationService::class.java
+        )
+        LocationService(serviceIntent)
+        Toast.makeText(this@LocationService, "緯度：" + location.latitude + '\n' +
+                "經度：" + location.longitude , Toast.LENGTH_LONG).show()
+    }*/
     override fun onDestroy() {
         super.onDestroy()
     }
