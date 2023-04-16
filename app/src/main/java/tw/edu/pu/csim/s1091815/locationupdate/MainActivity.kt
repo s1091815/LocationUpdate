@@ -2,28 +2,40 @@ package tw.edu.pu.csim.s1091815.locationupdate
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.location.LocationManagerCompat.getCurrentLocation
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 
 
 class MainActivity : AppCompatActivity() {
+
     var util: Util = Util()
     var myLocationService: LocationService = LocationService()
     lateinit var serviceIntent: Intent
 
     lateinit var startButton: Button
     lateinit var stopButton: Button
+    lateinit var newButton: Button
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +44,8 @@ class MainActivity : AppCompatActivity() {
 
         startButton = findViewById(R.id.startButton)
         stopButton = findViewById(R.id.stopButton)
+        newButton = findViewById(R.id.newButton)
+
         startButton.setOnClickListener {
 
             //如果同意位置存取權限，Android10以上需再判度背景位置資訊存取權
@@ -86,6 +100,10 @@ class MainActivity : AppCompatActivity() {
         stopButton.setOnClickListener {
             stopServiceFunc()
         }
+        newButton.setOnClickListener {
+
+        }
+
     }
     @RequiresApi(Build.VERSION_CODES.O)
     private fun starServiceFunc(){
@@ -120,6 +138,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "服務已停止", Toast.LENGTH_SHORT).show()
         }
     }
+
     override fun onDestroy() {
         super.onDestroy()
     }
