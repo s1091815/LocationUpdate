@@ -75,7 +75,7 @@ class LocationService : Service() {
                     // 註冊通知頻道
                     notificationManager.createNotificationChannel(notificationChannel)
                 }
-// 建構通知訊息內容
+                // 建構通知訊息內容
                 val builder = NotificationCompat.Builder(this, "1")
                     .setContentTitle("定位服務")
                     .setContentText(msg)

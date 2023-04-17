@@ -2,6 +2,7 @@ package tw.edu.pu.csim.s1091815.locationupdate
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -19,15 +20,12 @@ import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var locationTracker: LocationTracker
-
     var util: Util = Util()
     var myLocationService: LocationService = LocationService()
     lateinit var serviceIntent: Intent
 
     lateinit var startButton: Button
     lateinit var stopButton: Button
-    lateinit var newButton: Button
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +34,6 @@ class MainActivity : AppCompatActivity() {
 
         startButton = findViewById(R.id.startButton)
         stopButton = findViewById(R.id.stopButton)
-        newButton = findViewById(R.id.newButton)
 
         startButton.setOnClickListener {
 
@@ -92,15 +89,6 @@ class MainActivity : AppCompatActivity() {
         stopButton.setOnClickListener {
             stopServiceFunc()
         }
-        locationTracker = LocationTracker()
-
-        // 在Button的click事件中顯示最後的經緯度位置
-        val button = findViewById<Button>(R.id.newButton)
-        button.setOnClickListener {
-            val lastLocation = locationTracker.getLastLocation()
-            val message = "Last location: ${lastLocation.first}, ${lastLocation.second}"
-            Toast.makeText(this@MainActivity, message, Toast.LENGTH_SHORT).show()
-        }
 
     }
     @RequiresApi(Build.VERSION_CODES.O)
@@ -136,16 +124,7 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "服務已停止", Toast.LENGTH_SHORT).show()
         }
     }
-    /*private fun newServiceFunc(){
-        myLocationService = LocationService()
-        serviceIntent = Intent(
-            this,
-            myLocationService::class.java
-        )
-        LocationService(serviceIntent)
-        Toast.makeText(this@LocationService, "緯度：" + location.latitude + '\n' +
-                "經度：" + location.longitude , Toast.LENGTH_LONG).show()
-    }*/
+
     override fun onDestroy() {
         super.onDestroy()
     }
