@@ -12,13 +12,17 @@ import android.os.IBinder
 import android.provider.Settings
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.google.firebase.firestore.FirebaseFirestore
+import tw.edu.pu.csim.s1091815.locationupdate.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
+    lateinit var binding: ActivityMainBinding
 
 
     private lateinit var locationCatch: LocationCatch
@@ -36,7 +40,9 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        //setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         startButton = findViewById(R.id.startButton)
         stopButton = findViewById(R.id.stopButton)
@@ -96,8 +102,8 @@ class MainActivity : AppCompatActivity() {
         stopButton.setOnClickListener {
             stopServiceFunc()
         }
-        newButton.setOnClickListener {
-            showLocation(newButton)
+        binding.newButton.setOnClickListener {
+            showLocationDialog()
         }
 
     }
@@ -130,16 +136,58 @@ class MainActivity : AppCompatActivity() {
             isBound = false
         }
     }
+    fun showLocationDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("請輸入要保存位置的名稱")
 
-    fun showLocation(view: View) {
+        val input = EditText(this)
+        builder.setView(input)
+
+        builder.setPositiveButton("確定") { dialog, which ->
+            val userId = input.text.toString()
+            showLocation(userId)
+        }
+
+        builder.setNegativeButton("取消") { dialog, which ->
+            dialog.cancel()
+        }
+
+        builder.show()
+    }
+    fun showLocation(userId: String) {
         locationCatch.getLocation { location ->
             val latitude = location.latitude
             val longitude = location.longitude
-            Toast.makeText(
+            val locationData = HashMap<String,String>()
+            locationData["經度"] = latitude.toString()
+            locationData["緯度"] = longitude.toString()
+
+            /*Toast.makeText(
                 applicationContext,
                 "經度: $latitude, 緯度: $longitude",
                 Toast.LENGTH_LONG
-            ).show()
+            ).show()*/
+
+            val db = FirebaseFirestore.getInstance()
+            val locationRef = db.collection("locations")
+            //val userId = "user"
+
+            locationRef.document(userId).set(locationData)
+                .addOnSuccessListener {
+                    Toast.makeText(
+                        applicationContext,
+                        "成功保存位置",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(
+                        applicationContext,
+                        "保存位置失敗",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
         }
     }
 
