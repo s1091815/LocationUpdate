@@ -11,7 +11,7 @@
     <TextView
         android:textSize="24sp"
         android:textColor="@color/purple_200"
-        android:text="開啟前台通知服務，即使關閉了App，仍能每5秒更新經緯度\n"
+        android:text="Location Update\n"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <Button
@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"/>
     <Button
         android:id="@+id/newButton"
-        android:text="取得位置"
+        android:text="儲存喜愛位置"
         android:textSize="24sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
