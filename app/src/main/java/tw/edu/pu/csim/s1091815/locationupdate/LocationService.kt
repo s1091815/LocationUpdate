@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Build
 import android.os.IBinder
 import android.os.Looper
@@ -35,10 +36,10 @@ class LocationService : Service() {
     override fun onLocationResult(locationResult: LocationResult) {
         val locationList = locationResult.locations
         if(locationList.isNotEmpty()){
-            val location = locationList.last()
-            Toast.makeText(this@LocationService, "緯度：" + location.latitude + '\n' +
-                    "經度：" + location.longitude , Toast.LENGTH_LONG).show()
-            msg = "(" + location.latitude + ", " + location.longitude + ")"
+            val lastLocation = locationList.last()
+            Toast.makeText(this@LocationService, "緯度：" + lastLocation.latitude + '\n' +
+                    "經度：" + lastLocation.longitude , Toast.LENGTH_LONG).show()
+            msg = "(" + lastLocation.latitude + ", " + lastLocation.longitude + ")"
         }
     }
 }
@@ -58,7 +59,28 @@ class LocationService : Service() {
             myFusedLocationClient?.requestLocationUpdates(
                 myLocationRequest, myLocationCallback, Looper.getMainLooper())
         }
+
     }
+    /*fun LastKnownLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED) {
+
+            Toast.makeText(applicationContext, "需要同意位置權限才能存取經緯度", Toast.LENGTH_LONG).show()
+            return
+        }else{
+            myFusedLocationClient?.requestLocationUpdates(
+                myLocationRequest, myLocationCallback, Looper.getMainLooper())
+        }
+        myFusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            if (location != null) {
+                Toast.makeText(this@LocationService, "上次已知緯度：" + location.latitude + '\n' +
+                        "上次已知經度：" + location.longitude , Toast.LENGTH_LONG).show()
+                msg = "(" + location.latitude + ", " + location.longitude + ")"
+            }
+        }
+    }*/
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Thread {
             while (true) {

@@ -2,15 +2,15 @@ package tw.edu.pu.csim.s1091815.locationupdate
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.Settings
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -20,12 +20,18 @@ import androidx.core.content.ContextCompat
 
 class MainActivity : AppCompatActivity() {
 
+
+    private lateinit var locationCatch: LocationCatch
+    private var isBound = false
+
+
     var util: Util = Util()
     var myLocationService: LocationService = LocationService()
     lateinit var serviceIntent: Intent
 
     lateinit var startButton: Button
     lateinit var stopButton: Button
+    lateinit var newButton: Button
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +40,7 @@ class MainActivity : AppCompatActivity() {
 
         startButton = findViewById(R.id.startButton)
         stopButton = findViewById(R.id.stopButton)
+        newButton = findViewById(R.id.newButton)
 
         startButton.setOnClickListener {
 
@@ -89,8 +96,57 @@ class MainActivity : AppCompatActivity() {
         stopButton.setOnClickListener {
             stopServiceFunc()
         }
+        newButton.setOnClickListener {
+            showLocation(newButton)
+        }
 
     }
+
+
+
+    override fun onStart() {
+        super.onStart()
+        Intent(this, LocationCatch::class.java).also { intent ->
+            bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (isBound) {
+            unbindService(connection)
+            isBound = false
+        }
+    }
+
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as LocationCatch.LocationBinder
+            locationCatch = binder.getService()
+            isBound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isBound = false
+        }
+    }
+
+    fun showLocation(view: View) {
+        locationCatch.getLocation { location ->
+            val latitude = location.latitude
+            val longitude = location.longitude
+            Toast.makeText(
+                applicationContext,
+                "經度: $latitude, 緯度: $longitude",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
+
+
+
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun starServiceFunc(){
         myLocationService = LocationService()
