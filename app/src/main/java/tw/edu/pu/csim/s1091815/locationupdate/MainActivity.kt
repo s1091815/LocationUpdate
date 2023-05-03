@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var startButton: Button
     lateinit var stopButton: Button
     lateinit var newButton: Button
+    lateinit var button_show_data: Button
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +48,8 @@ class MainActivity : AppCompatActivity() {
         startButton = findViewById(R.id.startButton)
         stopButton = findViewById(R.id.stopButton)
         newButton = findViewById(R.id.newButton)
+        button_show_data = findViewById(R.id.button_show_data)
+
 
         startButton.setOnClickListener {
 
@@ -104,6 +107,10 @@ class MainActivity : AppCompatActivity() {
         }
         binding.newButton.setOnClickListener {
             showLocationDialog()
+        }
+        button_show_data.setOnClickListener {
+            val intent = Intent(this, Show_Save_Location::class.java)
+            startActivity(intent)
         }
 
     }

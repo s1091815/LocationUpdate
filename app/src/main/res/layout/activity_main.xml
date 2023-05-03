@@ -8,12 +8,7 @@
     android:orientation="vertical"
     android:gravity="center" >
 
-    <TextView
-        android:textSize="24sp"
-        android:textColor="@color/purple_200"
-        android:text="開啟前台通知服務，即使關閉了App，仍能每5秒更新經緯度\n"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+
     <Button
         android:id="@+id/startButton"
         android:text="啟用定位服務"
@@ -27,11 +22,19 @@
         android:textSize="24sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
     <Button
         android:id="@+id/newButton"
-        android:text="取得位置"
-        android:textSize="24sp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="儲存喜愛地點"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/button_show_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="顯示喜愛地點"
+        android:textSize="24sp" />
 
 </LinearLayout>
