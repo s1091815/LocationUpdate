@@ -198,10 +198,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun starServiceFunc(){
         myLocationService = LocationService()
