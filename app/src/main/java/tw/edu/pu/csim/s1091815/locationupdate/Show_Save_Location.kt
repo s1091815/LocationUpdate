@@ -114,27 +114,50 @@ class Show_Save_Location : AppCompatActivity() {
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
-
     private fun updateUserId(position: Int, currentUserId: String, newUserId: String) {
         val db = FirebaseFirestore.getInstance()
-        val locationRef = db.collection("locations").document(currentUserId)
 
-        locationRef.update("userId", newUserId)
-            .addOnSuccessListener {
-                Toast.makeText(this, "成功更新使用者ID", Toast.LENGTH_SHORT).show()
+        // 更新 locationDataList 中的使用者ID
+        val updatedLocationData = locationDataList[position].replaceFirst(currentUserId, newUserId)
+        locationDataList[position] = updatedLocationData
 
-                // 更新 locationDataList 中的使用者ID
-                val updatedLocationData = locationDataList[position].replaceFirst(currentUserId, newUserId)
-                locationDataList[position] = updatedLocationData
+        // 更新 Firebase Firestore 中的資料
+        //documentRef 表示當前使用者的文檔，newDocumentRef 表示新使用者的文檔
+        val documentRef = db.collection("locations").document(currentUserId)
+        val newDocumentRef = db.collection("locations").document(newUserId)
 
-                // 更新 ListView
-                (listView.adapter as ArrayAdapter<*>).notifyDataSetChanged()
+        //調用 documentRef.get() 從 Firebase Firestore 中獲取當前使用者的文檔。這是一個異步操作，當獲取成功時，它返回一個 DocumentSnapshot 對象，其中包含該文檔的數據。
+        documentRef.get()
+            .addOnSuccessListener { documentSnapshot ->
+                val documentData = documentSnapshot.data
+                documentRef.delete()
+                    .addOnSuccessListener {
+                        newDocumentRef.set(documentData as Map<String, Any>)/*創建一個新的文檔，將原始文檔的數據複製到新文檔中。*/
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "成功更新使用者ID", Toast.LENGTH_SHORT).show()
+                                (listView.adapter as ArrayAdapter<*>).notifyDataSetChanged()
+                            }
+                            .addOnFailureListener { exception ->
+                                Toast.makeText(this, "更新使用者ID失敗", Toast.LENGTH_SHORT).show()
+                                val restoredLocationData = locationDataList[position].replaceFirst(newUserId, currentUserId)
+                                locationDataList[position] = restoredLocationData
+                                (listView.adapter as ArrayAdapter<*>).notifyDataSetChanged()
+                            }
+                    }
+                    .addOnFailureListener { exception ->
+                        Toast.makeText(this, "更新使用者ID失敗", Toast.LENGTH_SHORT).show()
+                        val restoredLocationData = locationDataList[position].replaceFirst(newUserId, currentUserId)
+                        locationDataList[position] = restoredLocationData
+                        (listView.adapter as ArrayAdapter<*>).notifyDataSetChanged()
+                    }
             }
             .addOnFailureListener { exception ->
-                Toast.makeText(this, "更新使用者ID失敗", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "讀取原始文件失敗", Toast.LENGTH_SHORT).show()
+                val restoredLocationData = locationDataList[position].replaceFirst(newUserId, currentUserId)
+                locationDataList[position] = restoredLocationData
+                (listView.adapter as ArrayAdapter<*>).notifyDataSetChanged()
             }
     }
-
 
     fun onDeleteLocation(view: View) {
         val position = listView.getPositionForView(view)
