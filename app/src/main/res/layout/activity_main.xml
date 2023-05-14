@@ -1,40 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ConstraintLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    android:gravity="center"
     android:orientation="vertical"
-    android:gravity="center" >
+    tools:context=".MainActivity"
+    tools:visibility="visible">
 
 
     <Button
         android:id="@+id/startButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="264dp"
         android:text="啟用定位服務"
         android:textSize="24sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/stopButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:text="停止定位服務"
         android:textSize="24sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startButton" />
 
-    <Button
+    <ImageButton
+        android:id="@+id/GPSButton"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="GPS"
+        android:onClick="onMainButtonClick"
+        android:scaleType="fitCenter"
+        android:src="@drawable/gps"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <ImageButton
         android:id="@+id/newButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="儲存喜愛地點"
-        android:textSize="24sp" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="120dp"
+        android:layout_marginBottom="20dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="儲存喜愛地點"
+        android:onClick="onHiddennewButtonClick"
+        android:scaleType="fitCenter"
+        android:src="@drawable/add"
+        android:textSize="24sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/GPSButton"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
 
-    <Button
+    <ImageButton
         android:id="@+id/button_show_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="顯示喜愛地點"
-        android:textSize="24sp" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="120dp"
+        android:layout_marginBottom="20dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="顯示喜愛地點"
+        android:onClick="onHiddenbutton_show_dataButtonClick"
+        android:scaleType="fitCenter"
+        android:src="@drawable/favorite"
+        android:textSize="24sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/GPSButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="MissingConstraints" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

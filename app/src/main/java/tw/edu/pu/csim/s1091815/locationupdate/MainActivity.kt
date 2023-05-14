@@ -1,9 +1,11 @@
 package tw.edu.pu.csim.s1091815.locationupdate
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +15,7 @@ import android.provider.Settings
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -35,8 +38,9 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var startButton: Button
     lateinit var stopButton: Button
-    lateinit var newButton: Button
-    lateinit var button_show_data: Button
+    lateinit var newButton: ImageButton
+    lateinit var button_show_data: ImageButton
+    lateinit var GPSButton: ImageButton
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +53,14 @@ class MainActivity : AppCompatActivity() {
         stopButton = findViewById(R.id.stopButton)
         newButton = findViewById(R.id.newButton)
         button_show_data = findViewById(R.id.button_show_data)
+        GPSButton = findViewById(R.id.GPSButton)
 
+        val bitmap = BitmapFactory.decodeResource(resources, R.drawable.add)
+        newButton.setImageBitmap(bitmap)
+        val bitmap1 = BitmapFactory.decodeResource(resources, R.drawable.favorite)
+        button_show_data.setImageBitmap(bitmap1)
+        val bitmap2 = BitmapFactory.decodeResource(resources, R.drawable.gps)
+        GPSButton.setImageBitmap(bitmap2)
 
         startButton.setOnClickListener {
 
@@ -112,9 +123,19 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, Show_Save_Location::class.java)
             startActivity(intent)
         }
+        var isHidden = true
+        GPSButton.setOnClickListener{
+            if(isHidden) {
+                button_show_data.visibility = View.VISIBLE
+                newButton.visibility = View.VISIBLE
+            }else{
+                button_show_data.visibility = View.INVISIBLE
+                newButton.visibility = View.INVISIBLE
+            }
+            isHidden = !isHidden
+        }
 
     }
-
 
 
     override fun onStart() {
@@ -169,15 +190,8 @@ class MainActivity : AppCompatActivity() {
             locationData["經度"] = latitude.toString()
             locationData["緯度"] = longitude.toString()
 
-            /*Toast.makeText(
-                applicationContext,
-                "經度: $latitude, 緯度: $longitude",
-                Toast.LENGTH_LONG
-            ).show()*/
-
             val db = FirebaseFirestore.getInstance()
             val locationRef = db.collection("locations")
-            //val userId = "user"
 
             locationRef.document(userId).set(locationData)
                 .addOnSuccessListener {
@@ -194,7 +208,6 @@ class MainActivity : AppCompatActivity() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-
         }
     }
 

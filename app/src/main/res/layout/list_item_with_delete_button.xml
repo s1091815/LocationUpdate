@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="120dp"
+    android:orientation="horizontal"
+    android:padding="15dp">
+
+    <TextView
+        android:id="@+id/text_view_location"
+        android:layout_width="269dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+
+    <ImageButton
+        android:id="@+id/button_delete"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="刪除"
+        android:onClick="onDeleteLocation"
+        android:scaleType="fitCenter"
+        android:src="@drawable/delete" />
+
+    <ImageButton
+        android:id="@+id/edit_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="編輯"
+        android:onClick="editUserId"
+        android:scaleType="fitCenter"
+        android:src="@drawable/edit" />
+
+</LinearLayout>
