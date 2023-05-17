@@ -61,26 +61,7 @@ class LocationService : Service() {
         }
 
     }
-    /*fun LastKnownLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED
-            && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
-            != PackageManager.PERMISSION_GRANTED) {
 
-            Toast.makeText(applicationContext, "需要同意位置權限才能存取經緯度", Toast.LENGTH_LONG).show()
-            return
-        }else{
-            myFusedLocationClient?.requestLocationUpdates(
-                myLocationRequest, myLocationCallback, Looper.getMainLooper())
-        }
-        myFusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            if (location != null) {
-                Toast.makeText(this@LocationService, "上次已知緯度：" + location.latitude + '\n' +
-                        "上次已知經度：" + location.longitude , Toast.LENGTH_LONG).show()
-                msg = "(" + location.latitude + ", " + location.longitude + ")"
-            }
-        }
-    }*/
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Thread {
             while (true) {

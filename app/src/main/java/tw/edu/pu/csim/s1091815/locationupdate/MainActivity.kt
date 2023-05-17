@@ -1,36 +1,30 @@
 package tw.edu.pu.csim.s1091815.locationupdate
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
 import android.provider.Settings
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.FirebaseFirestore
 import tw.edu.pu.csim.s1091815.locationupdate.databinding.ActivityMainBinding
 
-
 class MainActivity : AppCompatActivity() {
     lateinit var binding: ActivityMainBinding
 
-
     private lateinit var locationCatch: LocationCatch
     private var isBound = false
-
 
     var util: Util = Util()
     var myLocationService: LocationService = LocationService()
@@ -41,6 +35,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var newButton: ImageButton
     lateinit var button_show_data: ImageButton
     lateinit var GPSButton: ImageButton
+    lateinit var loading: ImageView
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +49,27 @@ class MainActivity : AppCompatActivity() {
         newButton = findViewById(R.id.newButton)
         button_show_data = findViewById(R.id.button_show_data)
         GPSButton = findViewById(R.id.GPSButton)
+        loading = findViewById(R.id.loading)
+
+        startButton.visibility = View.INVISIBLE;
+        stopButton.visibility = View.INVISIBLE;
+        GPSButton.visibility = View.INVISIBLE;
+        newButton.visibility = View.INVISIBLE;
+        button_show_data.visibility = View.INVISIBLE;
+
+        val handler = Handler()
+        handler.postDelayed({
+            // 顯示按鈕
+            startButton.visibility = View.VISIBLE
+            stopButton.visibility = View.VISIBLE
+            GPSButton.visibility = View.VISIBLE
+            newButton.visibility = View.VISIBLE
+            button_show_data.visibility = View.VISIBLE
+
+            // 隱藏圖片
+            loading.visibility = View.GONE
+            showSafeDialog()
+        }, 3000) //延遲3秒後顯示
 
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.add)
         newButton.setImageBitmap(bitmap)
@@ -136,7 +152,18 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+    private fun showSafeDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("\u26A0 用路安全提醒")
+        builder.setMessage("請在運動時保持專注，注意路況，\n運動過程中可不必頻繁使用本APP。\n確定後可繼續使用。")
 
+        builder.setPositiveButton("確定") { dialog, which ->
+            // Continue with the program
+            dialog.dismiss()  // 關閉對話框
+        }
+        builder.setCancelable(false)
+        builder.show()
+    }
 
     override fun onStart() {
         super.onStart()
@@ -256,7 +283,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun requestFineLocationPermission() {
         ActivityCompat.requestPermissions(this,
-            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION,), MY_FINE_LOCATION_REQUEST)
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), MY_FINE_LOCATION_REQUEST)
     }
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<String>, grantResults: IntArray) {
@@ -273,7 +300,12 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Toast.makeText(this, "拒絕位置存取權限", Toast.LENGTH_LONG).show()
                     if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.fromParts("package", this.packageName, null),),)
+                        startActivity(
+                            Intent(
+                                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                                Uri.fromParts("package", this.packageName, null)
+                            ),
+                        )
                     }
                 }
                 return
