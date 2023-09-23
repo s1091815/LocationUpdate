@@ -30,8 +30,7 @@ class MainActivity : AppCompatActivity() {
     var myLocationService: LocationService = LocationService()
     lateinit var serviceIntent: Intent
 
-    lateinit var startButton: Button
-    lateinit var stopButton: Button
+
     lateinit var newButton: ImageButton
     lateinit var button_show_data: ImageButton
     lateinit var GPSButton: ImageButton
@@ -40,19 +39,16 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_main)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        startButton = findViewById(R.id.startButton)
-        stopButton = findViewById(R.id.stopButton)
+
         newButton = findViewById(R.id.newButton)
         button_show_data = findViewById(R.id.button_show_data)
         GPSButton = findViewById(R.id.GPSButton)
         loading = findViewById(R.id.loading)
 
-        startButton.visibility = View.INVISIBLE;
-        stopButton.visibility = View.INVISIBLE;
+
         GPSButton.visibility = View.INVISIBLE;
         newButton.visibility = View.INVISIBLE;
         button_show_data.visibility = View.INVISIBLE;
@@ -60,8 +56,7 @@ class MainActivity : AppCompatActivity() {
         val handler = Handler()
         handler.postDelayed({
             // 顯示按鈕
-            startButton.visibility = View.VISIBLE
-            stopButton.visibility = View.VISIBLE
+
             GPSButton.visibility = View.VISIBLE
             newButton.visibility = View.VISIBLE
             button_show_data.visibility = View.VISIBLE
@@ -77,8 +72,6 @@ class MainActivity : AppCompatActivity() {
         button_show_data.setImageBitmap(bitmap1)
         val bitmap2 = BitmapFactory.decodeResource(resources, R.drawable.gps)
         GPSButton.setImageBitmap(bitmap2)
-
-        startButton.setOnClickListener {
 
             //如果同意位置存取權限，Android10以上需再判度背景位置資訊存取權
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -110,28 +103,9 @@ class MainActivity : AppCompatActivity() {
                 else{
                     starServiceFunc()
                 }
-                //尚未同意位置權限
-            }else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED){
-                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-                    AlertDialog.Builder(this)
-                        .setTitle("位置存取權限")
-                        .setMessage("需要同意位置存取權限")
-                        .setPositiveButton(
-                            "OK"
-                        ) { _, _ ->
-                            requestFineLocationPermission()
-                        }
-                        .create().show()
-                } else {
-                    requestFineLocationPermission()
-                }
+
             }
 
-        }
-        stopButton.setOnClickListener {
-            stopServiceFunc()
-        }
         binding.newButton.setOnClickListener {
             showLocationDialog()
         }
@@ -274,6 +248,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        //停止服務
+        stopServiceFunc()
     }
 
     private fun requestBackgroundLocationPermission() {
