@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "193342285129",
+    "project_id": "locationupdate-2a740",
+    "storage_bucket": "locationupdate-2a740.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193342285129:android:323117d68db5714ad8e698",
+        "android_client_info": {
+          "package_name": "tw.edu.pu.csim.s1091815.locationupdate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "193342285129-sfi77mb6t2mq23gsp9a1icusjb4anven.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDA7FjfuhmVebySjJaD0hHXbdMV6AinryI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "193342285129-sfi77mb6t2mq23gsp9a1icusjb4anven.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

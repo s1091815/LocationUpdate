@@ -1,6 +1,7 @@
 package tw.edu.pu.csim.s1091815.locationupdate
 
 import android.Manifest
+import android.app.ActionBar
 import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
@@ -35,6 +36,8 @@ class MainActivity : AppCompatActivity() {
     lateinit var button_show_data: ImageButton
     lateinit var GPSButton: ImageButton
     lateinit var loading: ImageView
+    lateinit var user: ImageButton
+    lateinit var record: ImageButton
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,24 +45,37 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        supportActionBar?.title = ""
+
+        val actionBar = supportActionBar
+
+        actionBar?.displayOptions = androidx.appcompat.app.ActionBar.DISPLAY_SHOW_CUSTOM
+        actionBar?.setCustomView(R.layout.custom_actionbar)
+
+        val imageView = actionBar?.customView?.findViewById<ImageView>(R.id.customImageView)
+        imageView?.setImageResource(R.drawable.logo)
+
 
         newButton = findViewById(R.id.newButton)
         button_show_data = findViewById(R.id.button_show_data)
         GPSButton = findViewById(R.id.GPSButton)
         loading = findViewById(R.id.loading)
+        user = findViewById(R.id.user)
+        record = findViewById(R.id.record)
 
-
-        GPSButton.visibility = View.INVISIBLE;
-        newButton.visibility = View.INVISIBLE;
-        button_show_data.visibility = View.INVISIBLE;
+        GPSButton.visibility = View.INVISIBLE
+        newButton.visibility = View.INVISIBLE
+        button_show_data.visibility = View.INVISIBLE
+        user.visibility = View.INVISIBLE
+        record.visibility = View.INVISIBLE
 
         val handler = Handler()
         handler.postDelayed({
             // 顯示按鈕
 
             GPSButton.visibility = View.VISIBLE
-            newButton.visibility = View.VISIBLE
-            button_show_data.visibility = View.VISIBLE
+            user.visibility = View.VISIBLE
+            record.visibility = View.VISIBLE
 
             // 隱藏圖片
             loading.visibility = View.GONE
@@ -219,8 +235,6 @@ class MainActivity : AppCompatActivity() {
             this,
             myLocationService::class.java
         )
-        //if (!Util.isMyServiceRunning(myLocationService::class.java, this)) {
-
         if (!util.isMyServiceRunning){
             util.isMyServiceRunning = true
             startForegroundService(serviceIntent)

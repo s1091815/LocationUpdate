@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.FirebaseApp
@@ -20,6 +21,7 @@ class AuthActivity : AppCompatActivity() {
     lateinit var phone: EditText
     lateinit var otp: EditText
     lateinit var btngenOTP: Button
+    lateinit var btnlogin: Button
     lateinit var btnverOTP: Button
     lateinit var mAuth: FirebaseAuth
     lateinit var verificationId: String
@@ -28,11 +30,22 @@ class AuthActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_auth)
 
+        supportActionBar?.title = ""
+
+        val actionBar = supportActionBar
+
+        actionBar?.displayOptions = androidx.appcompat.app.ActionBar.DISPLAY_SHOW_CUSTOM
+        actionBar?.setCustomView(R.layout.custom_actionbar)
+
+        val imageView = actionBar?.customView?.findViewById<ImageView>(R.id.customImageView)
+        imageView?.setImageResource(R.drawable.logo)
+
         FirebaseApp.initializeApp(this)
 
         phone = findViewById(R.id.phone)
         otp = findViewById(R.id.otp)
         btngenOTP = findViewById(R.id.btngenOTP)
+        btnlogin = findViewById(R.id.btnlogin)
         btnverOTP = findViewById(R.id.btnverOTP)
         mAuth = FirebaseAuth.getInstance()
 
@@ -42,6 +55,16 @@ class AuthActivity : AppCompatActivity() {
                 Toast.makeText(this, "請輸入正確的手機號碼", Toast.LENGTH_SHORT).show()
             } else {
                 sendVerificationCode(number)
+            }
+        }
+
+        btnlogin.setOnClickListener { view ->
+            val number = phone.text.toString()
+
+            if (TextUtils.isEmpty(number)) {
+                Toast.makeText(this, "請輸入正確的手機號碼", Toast.LENGTH_SHORT).show()
+            } else {
+                checkUserExistence(number)
             }
         }
 
@@ -59,6 +82,19 @@ class AuthActivity : AppCompatActivity() {
             .build()
         PhoneAuthProvider.verifyPhoneNumber(options)
     }
+    private fun checkUserExistence(phoneNumber: String) {
+        val auth = FirebaseAuth.getInstance()
+        val user = auth.currentUser
+
+        if (user != null) {
+            Toast.makeText(this@AuthActivity, "用戶已登入", Toast.LENGTH_SHORT).show()
+            navigateToMainActivity()
+        } else {
+            Toast.makeText(this@AuthActivity, "無此用戶紀錄，請註冊！(已傳送簡訊OTP驗證碼)", Toast.LENGTH_SHORT).show()
+            sendVerificationCode(phoneNumber)
+        }
+    }
+
 
     private fun VerifyCode() {
         val code = otp.text.toString()
