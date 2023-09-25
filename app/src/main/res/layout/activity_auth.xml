@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <EditText
+        android:id="@+id/phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="請輸入手機號碼"
+        android:inputType="phone"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/btngenOTP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="產生OTP驗證碼" />
+
+    <TextView
+        android:id="@+id/txvResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:text=""
+        android:textSize="16sp"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/otp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="請輸入OTP驗證碼"
+        android:inputType="text"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/btnverOTP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="驗證OTP驗證碼" />
+
+</LinearLayout>
